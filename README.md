@@ -1,1 +1,984 @@
 josuelite-chat 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Josuelite Chat - Connect, Share, Discover</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 15px 25px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            color: #6a11cb;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .icon {
+            font-size: 22px;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .icon:hover {
+            color: #6a11cb;
+            transform: scale(1.1);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: #f0f2f5;
+            border-radius: 25px;
+            padding: 8px 15px;
+            width: 300px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            padding: 5px 10px;
+            font-size: 16px;
+        }
+
+        .search-icon {
+            color: #6a11cb;
+        }
+
+        .main-content {
+            display: flex;
+            gap: 25px;
+            flex: 1;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: #555;
+            padding: 10px 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: #f0f2f5;
+            color: #6a11cb;
+        }
+
+        .sidebar-icon {
+            font-size: 20px;
+            width: 25px;
+            text-align: center;
+        }
+
+        .content {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .content-header h2 {
+            color: #6a11cb;
+            font-size: 24px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .tab-button {
+            padding: 8px 15px;
+            border-radius: 20px;
+            background-color: #f0f2f5;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background-color: #6a11cb;
+            color: white;
+        }
+
+        .feed {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-img {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .card-content {
+            padding: 15px;
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .card p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .card-action {
+            color: #666;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .card-action:hover {
+            color: #6a11cb;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .auth-button {
+            padding: 10px 25px;
+            border-radius: 25px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .signup-btn {
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            color: white;
+        }
+
+        .login-btn {
+            background-color: white;
+            color: #6a11cb;
+            border: 2px solid #6a11cb;
+        }
+
+        .auth-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            margin-top: 30px;
+        }
+
+        /* Authentication Form Styles */
+        .auth-container {
+            background-color: #fff;
+            width: 450px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .tab-header {
+            display: flex;
+        }
+
+        .tab-header div {
+            flex: 1;
+            text-align: center;
+            padding: 18px;
+            cursor: pointer;
+            font-weight: 600;
+            background-color: #f0f2f5;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+
+        .tab-header div.active {
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            color: #fff;
+        }
+
+        .auth-form {
+            padding: 25px;
+            position: absolute;
+            width: 400px;
+            opacity: 0;
+            transform: translateX(50px);
+            pointer-events: none;
+            transition: all 0.5s ease;
+        }
+
+        .auth-form.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+            position: relative;
+        }
+
+        .auth-form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #6a11cb;
+            font-size: 24px;
+        }
+
+        .auth-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .auth-form input, .auth-form select, .auth-form button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 15px;
+        }
+
+        .auth-form button {
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .auth-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+        }
+
+        .mobile-container {
+            display: flex;
+        }
+
+        .mobile-container select {
+            width: 35%;
+            margin-right: 5%;
+        }
+
+        .mobile-container input {
+            width: 60%;
+        }
+
+        .error {
+            color: #ff4757;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .forgot-password {
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .forgot-password a {
+            color: #6a11cb;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .get-code-section {
+            display: none;
+            margin-top: 10px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, opacity 0.5s ease;
+            opacity: 0;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        .get-code-section.active {
+            display: block;
+            max-height: 200px;
+            opacity: 1;
+        }
+
+        .get-code-section p {
+            margin-bottom: 10px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .language-selector {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .language-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 8px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .language-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .language-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            width: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            margin-top: 5px;
+        }
+        
+        .language-dropdown.show {
+            display: block;
+        }
+        
+        .language-option {
+            padding: 12px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.2s ease;
+        }
+        
+        .language-option:hover {
+            background: #f5f5f5;
+        }
+        
+        .language-option:last-child {
+            border-bottom: none;
+        }
+        
+        .language-flag {
+            width: 20px;
+            text-align: center;
+        }
+
+        .auth-section {
+            display: none;
+            margin: 30px auto;
+            max-width: 450px;
+        }
+
+        .auth-section.active {
+            display: block;
+        }
+
+        .app-content {
+            display: block;
+        }
+
+        .app-content.hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .search-bar {
+                width: 200px;
+            }
+            
+            .nav-icons {
+                gap: 15px;
+            }
+
+            .auth-container {
+                width: 90%;
+            }
+
+            .auth-form {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .nav-icons {
+                width: 100%;
+                justify-content: space-around;
+            }
+            
+            .auth-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .mobile-container {
+                flex-direction: column;
+            }
+
+            .mobile-container select, .mobile-container input {
+                width: 100%;
+            }
+
+            .mobile-container select {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Authentication Section -->
+    <section class="auth-section active" id="authSection">
+        <div class="auth-container">
+            <!-- Tabs -->
+            <div class="tab-header">
+                <div id="tabSignup" class="active">Sign Up</div>
+                <div id="tabLogin">Login</div>
+            </div>
+
+            <!-- Sign Up Form -->
+            <form id="signupForm" class="auth-form active">
+                <h2>SIGN UP</h2>
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" placeholder="Enter your first name" required>
+
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" placeholder="Enter your last name" required>
+
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" required>
+
+                <label for="gender">Gender</label>
+                <select id="gender" required>
+                    <option value="">Select gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+
+                <label for="signupMobile">Mobile Number</label>
+                <div class="mobile-container">
+                    <select id="countryCode">
+                        <option value="">Code</option>
+                        <option value="+44">UK (+44)</option>
+                        <option value="+1">USA (+1)</option>
+                        <option value="+250">Rwanda (+250)</option>
+                        <option value="+257">Burundi (+257)</option>
+                        <option value="+255">Tanzania (+255)</option>
+                    </select>
+                    <input type="tel" id="signupMobile" placeholder="7XXXXXXXX">
+                </div>
+
+                <label for="signupEmail">Email</label>
+                <input type="email" id="signupEmail" placeholder="email@example.com">
+
+                <div class="error" id="signupError"></div>
+
+                <label for="language">Language</label>
+                <select id="language" required>
+                    <option value="">Select language</option>
+                    <option value="en-uk">English (UK)</option>
+                    <option value="en-usa">English (USA)</option>
+                    <option value="kinyarwanda">Ikinyarwanda</option>
+                    <option value="ikirundi">Ikirundi</option>
+                    <option value="fr">Français</option>
+                    <option value="tanzania">Tanzania</option>
+                </select>
+
+                <button type="submit">Create Account</button>
+            </form>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form">
+                <h2>LOGIN</h2>
+                <label for="loginContact">Mobile Number / Email</label>
+                <div class="mobile-container">
+                    <select id="loginCountryCode">
+                        <option value="">Code</option>
+                        <option value="+44">UK (+44)</option>
+                        <option value="+1">USA (+1)</option>
+                        <option value="+250">Rwanda (+250)</option>
+                        <option value="+257">Burundi (+257)</option>
+                        <option value="+255">Tanzania (+255)</option>
+                    </select>
+                    <input type="text" id="loginContact" placeholder="7XXXXXXXX or email@example.com" required>
+                </div>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+
+                <button type="submit">CONTINUE</button>
+
+                <div class="forgot-password">
+                    <a id="forgotPasswordLink">Forgot Password?</a>
+                </div>
+
+                <div class="get-code-section" id="getCodeSection">
+                    <p>Enter your mobile number/email to get a new password via SMS, Email, or WhatsApp:</p>
+                    <input type="text" id="recoveryContact" placeholder="7XXXXXXXX or email@example.com">
+                    <button type="button" id="getNewCode">Get New Code</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- App Content (Hidden initially) -->
+    <div class="app-content hidden" id="appContent">
+        <div class="container">
+            <header>
+                <div class="logo">
+                    <i class="fas fa-comments logo-icon"></i>
+                    <h1>Josuelite Chat</h1>
+                </div>
+                
+                <div class="search-bar">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" placeholder="Search for people, videos, music...">
+                </div>
+                
+                <div class="nav-icons">
+                    <div class="icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-comment-dots"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">5</span>
+                    </div>
+                    <div class="icon" id="menu-icon">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                </div>
+                
+                <div class="language-selector">
+                    <div class="language-btn" id="languageBtn">
+                        <i class="fas fa-globe"></i>
+                        <span>English</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="language-dropdown" id="languageDropdown">
+                        <!-- Language options will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="auth-buttons">
+                    <button class="auth-button logout-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+            
+            <div class="main-content">
+                <div class="sidebar">
+                    <ul class="sidebar-menu">
+                        <li><a href="#" class="active"><i class="fas fa-home sidebar-icon"></i> Home</a></li>
+                        <li><a href="#"><i class="fas fa-video sidebar-icon"></i> Live Videos</a></li>
+                        <li><a href="#"><i class="fas fa-music sidebar-icon"></i> Music</a></li>
+                        <li><a href="#"><i class="fas fa-film sidebar-icon"></i> Reels</a></li>
+                        <li><a href="#"><i class="fas fa-comment-dots sidebar-icon"></i> Messages</a></li>
+                        <li><a href="#"><i class="fas fa-user-friends sidebar-icon"></i> Friends</a></li>
+                        <li><a href="#"><i class="fas fa-cog sidebar-icon"></i> Settings</a></li>
+                    </ul>
+                </div>
+                
+                <div class="content">
+                    <div class="content-header">
+                        <h2>Trending Today</h2>
+                        <div class="tab-buttons">
+                            <button class="tab-button active">All</button>
+                            <button class="tab-button">Videos</button>
+                            <button class="tab-button">Music</button>
+                            <button class="tab-button">Reels</button>
+                        </div>
+                    </div>
+                    
+                    <div class="feed">
+                        <div class="card">
+                            <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80')"></div>
+                            <div class="card-content">
+                                <h3>Summer Vibes Mix 2023</h3>
+                                <p>Chill out with the hottest summer tracks from around the world</p>
+                                <div class="card-footer">
+                                    <span>By DJ Josue</span>
+                                    <div class="card-actions">
+                                        <i class="fas fa-heart card-action"></i>
+                                        <i class="fas fa-share card-action"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1557672172-298e090bd0f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80')"></div>
+                            <div class="card-content">
+                                <h3>Live Concert: City Lights</h3>
+                                <p>Join us for an exclusive live performance from the heart of the city</p>
+                                <div class="card-footer">
+                                    <span>Starts in 2 hours</span>
+                                    <div class="card-actions">
+                                        <i class="fas fa-heart card-action"></i>
+                                        <i class="fas fa-share card-action"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1616469829445-2d0e8c8f5d6e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80')"></div>
+                            <div class="card-content">
+                                <h3>Travel Reels: Mountain Adventure</h3>
+                                <p>Experience breathtaking views from the world's highest peaks</p>
+                                <div class="card-footer">
+                                    <span>Adventure Seekers</span>
+                                    <div class="card-actions">
+                                        <i class="fas fa-heart card-action"></i>
+                                        <i class="fas fa-share card-action"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>&copy; 2023 Josuelite Chat. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Authentication functionality
+        const authSection = document.getElementById('authSection');
+        const appContent = document.getElementById('appContent');
+        const tabSignup = document.getElementById('tabSignup');
+        const tabLogin = document.getElementById('tabLogin');
+        const signupForm = document.getElementById('signupForm');
+        const loginForm = document.getElementById('loginForm');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Tab switching with animation
+        tabSignup.addEventListener('click', () => {
+            tabSignup.classList.add('active');
+            tabLogin.classList.remove('active');
+            signupForm.classList.add('active');
+            loginForm.classList.remove('active');
+        });
+
+        tabLogin.addEventListener('click', () => {
+            tabLogin.classList.add('active');
+            tabSignup.classList.remove('active');
+            loginForm.classList.add('active');
+            signupForm.classList.remove('active');
+        });
+
+        // Sign Up validation
+        signupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const mobile = document.getElementById('signupMobile').value.trim();
+            const countryCode = document.getElementById('countryCode').value;
+            const email = document.getElementById('signupEmail').value.trim();
+            const errorMessage = document.getElementById('signupError');
+            errorMessage.textContent = '';
+
+            if (!mobile && !email) {
+                errorMessage.textContent = 'Please enter either a mobile number or an email.';
+                return;
+            }
+            if (mobile && !countryCode) {
+                errorMessage.textContent = 'Please select a country code for your mobile number.';
+                return;
+            }
+
+            // Simulate successful signup
+            alert('Account created successfully! Welcome to Josuelite Chat!');
+            showAppContent();
+        });
+
+        // Login form submission
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Simulate successful login
+            alert('Login successful! Welcome back to Josuelite Chat!');
+            showAppContent();
+        });
+
+        // Forgot password toggle with animation
+        const forgotLink = document.getElementById('forgotPasswordLink');
+        const getCodeSection = document.getElementById('getCodeSection');
+
+        forgotLink.addEventListener('click', function() {
+            getCodeSection.classList.toggle('active');
+        });
+
+        // Get new code button
+        document.getElementById('getNewCode').addEventListener('click', function() {
+            const recoveryContact = document.getElementById('recoveryContact').value.trim();
+            if (!recoveryContact) {
+                alert('Please enter your mobile number or email to receive a new code.');
+                return;
+            }
+            alert(`A new password code will be sent to ${recoveryContact} via SMS, Email, or WhatsApp.`);
+        });
+
+        // Show app content after authentication
+        function showAppContent() {
+            authSection.classList.remove('active');
+            appContent.classList.remove('hidden');
+        }
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', function() {
+            appContent.classList.add('hidden');
+            authSection.classList.add('active');
+            // Reset forms
+            signupForm.reset();
+            loginForm.reset();
+            getCodeSection.classList.remove('active');
+            // Switch to login tab
+            tabLogin.click();
+        });
+
+        // Language selector functionality
+        const languages = [
+            { code: 'en', name: 'English', flag: '🇺🇸' },
+            { code: 'es', name: 'Spanish', flag: '🇪🇸' },
+            { code: 'fr', name: 'French', flag: '🇫🇷' },
+            { code: 'de', name: 'German', flag: '🇩🇪' },
+            { code: 'it', name: 'Italian', flag: '🇮🇹' },
+            { code: 'pt', name: 'Portuguese', flag: '🇵🇹' },
+            { code: 'ru', name: 'Russian', flag: '🇷🇺' },
+            { code: 'zh', name: 'Chinese', flag: '🇨🇳' },
+            { code: 'ja', name: 'Japanese', flag: '🇯🇵' },
+            { code: 'ko', name: 'Korean', flag: '🇰🇷' },
+            { code: 'ar', name: 'Arabic', flag: '🇸🇦' },
+            { code: 'hi', name: 'Hindi', flag: '🇮🇳' },
+            { code: 'tr', name: 'Turkish', flag: '🇹🇷' },
+            { code: 'nl', name: 'Dutch', flag: '🇳🇱' },
+            { code: 'sv', name: 'Swedish', flag: '🇸🇪' },
+            { code: 'pl', name: 'Polish', flag: '🇵🇱' },
+            { code: 'th', name: 'Thai', flag: '🇹🇭' },
+            { code: 'vi', name: 'Vietnamese', flag: '🇻🇳' }
+        ];
+
+        // Populate language dropdown
+        const dropdown = document.getElementById('languageDropdown');
+        languages.forEach(lang => {
+            const option = document.createElement('div');
+            option.className = 'language-option';
+            option.innerHTML = `
+                <span class="language-flag">${lang.flag}</span>
+                <span>${lang.name}</span>
+            `;
+            option.addEventListener('click', () => selectLanguage(lang));
+            dropdown.appendChild(option);
+        });
+
+        // Language selector functionality
+        const languageBtn = document.getElementById('languageBtn');
+        const languageDropdown = document.getElementById('languageDropdown');
+
+        languageBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            languageDropdown.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+            languageDropdown.classList.remove('show');
+        });
+
+        function selectLanguage(lang) {
+            document.querySelector('#languageBtn span').textContent = lang.name;
+            languageDropdown.classList.remove('show');
+            
+            // Here you would typically load translation strings
+            console.log(`Language changed to: ${lang.name}`);
+            
+            // For a real implementation, you would fetch translation files
+            // and update all text content on the page
+        }
+
+        // Initialize with default language
+        selectLanguage(languages[0]);
+
+        // Tab functionality for content
+        const tabButtons = document.querySelectorAll('.tab-button');
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
